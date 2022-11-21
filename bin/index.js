@@ -21,7 +21,7 @@ const program = new Command();
 // Define commands
 
 program
-    .arguments("<folder>", "Folder where you want to initialize project")
+    .argument("<folder>", "Folder where you want to initialize project")
     .description("Initiating a cqx project")
     .option("-d, --description <description>", "Description of the project")
     .option("--ci", "Add .circleci/config.yml file")
