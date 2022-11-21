@@ -1,3 +1,3 @@
 import init from "./init";
 
-init()
+init("test-create", "for world initialization")

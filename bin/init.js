@@ -25,11 +25,11 @@ import fsExtra from "fs-extra";
 function init(
     apiname,
     description,
-    ci,
-    setup,
-    gregion,
-    gproject,
-    modules_path
+    ci=false,
+    setup=false,
+    gregion="europe-west-3",
+    gproject="cqx",
+    modules_path=false
 ) {
     return new Promise(async(resolves, rejects) => {
         try {
