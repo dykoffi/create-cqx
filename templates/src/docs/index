@@ -1,0 +1,12 @@
+import generalDocs from "./info.json";
+<% tables.forEach((table, i) => { %>
+import <%= table %>Docs from "../modules/<%= table %>/<%= table %>.docs.json"; <% }); %>
+import homeDocs from "../modules/home/home.docs.json";
+
+export default {
+    ...generalDocs,
+    paths: {
+        ...homeDocs,<% tables.forEach((table, i) => { %> 
+        ...<%= table %>Docs,<% }) %>
+    }
+};

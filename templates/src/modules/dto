@@ -1,0 +1,13 @@
+import { IsNumber, IsString } from "class-validator";
+import { Expose } from "class-transformer";
+
+export class create<%= tableU %> {
+    <% Object.keys(schema["properties"]).filter((prop) => !/_$/.test(prop)).forEach((value, index)=>{ %>
+    @Expose()
+    @IsString()
+    <%= value  %>: string;
+<% }) %>}
+
+export class update<%= tableU %> {
+    
+}

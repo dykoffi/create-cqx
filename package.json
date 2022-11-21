@@ -1,0 +1,40 @@
+{
+    "name": "create-cqx",
+    "version": "1.13.0",
+    "description": "make fastly api based on expressjs & prisma",
+    "main": "./bin/index.js",
+    "private": false,
+    "bin": {
+        "create-cqx": "./bin/index.js"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dykoffi/cqx.git"
+    },
+    "keywords": [
+        "cqx",
+        "express",
+        "prisma",
+        "api"
+    ],
+    "author": {
+        "email": "koffiedy@gmail.com",
+        "name": "koffi edy",
+        "url": "https://www.linkedin.com/in/edy-koffi-948494192/"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/dykoffi/cqx/issues"
+    },
+    "homepage": "https://github.com/dykoffi/cqx#readme",
+    "type": "module",
+    "dependencies": {
+        "chalk": "^5.0.1",
+        "ciql-json": "^1.9.6",
+        "ejs": "^3.1.7",
+        "random-number": "^0.0.9"
+    }
+}

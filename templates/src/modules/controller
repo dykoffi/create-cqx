@@ -1,0 +1,115 @@
+import express from "express";
+import { Prisma as PTypes } from "@prisma/client"
+import logger from "../../utils/winston";
+<% if(dto) { %>import checkDTO from "../../middlewares/checkDTO"; <% } %>
+import <%= table %>Service from "./<%= table %>.service"
+
+<% if(dto) { %>import { create<%= tableU %>, update<%= tableU %> } from "./<%= table %>.dto";  <% } %>
+
+const router: express.Router = require("express").Router();
+const <%= table %> = new <%= table %>Service();
+
+type PError = PTypes.PrismaClientKnownRequestError | Error
+
+router
+
+    /**
+     * @descr Create new <%= table %>
+     * @route POST /<%= table %>
+     * @access public
+     */
+    .post("/", <% if(dto) { %>checkDTO(create<%= tableU %>)), <% } %> async (req: express.Request, res: express.Response) => {
+
+        <%= table %>.addOne(req.body)
+            .then((data) => { res.status(201).json({ data, message: "object <%= table %> created successfully" }); })
+            .catch((error: Error) => {
+                logger.error(error.message);
+                res.status(500).json({ error: "InternalError", message: "Something wrong" });
+            });
+
+    })
+
+    /**
+    * @descr get all <%= table %>
+    * @route GET /<%= table %>
+    * @access public
+    */
+
+    .get("/", async (req: express.Request, res: express.Response) => {
+
+        <%= table %>.getAll({ where: req.query, orderBy: { id_: "asc" } })
+            .then((data) => { res.json(data); })
+            .catch((error: Error) => {
+                logger.error(error.message);
+                res.status(500).json({ error: "InternalError", message: "Something wrong" });
+            });
+
+    })
+
+    /**
+    * @descr Show specify <%= table %> identified by id
+    * @route GET /<%= table %>/id
+    * @access public
+    */
+
+    .get("/:id", async (req: express.Request, res: express.Response) => {
+
+        <%= table %>.getById(Number(req.params.id))
+            .then((data) => {
+                res.status(data === null ? 404 : 200).json(data);
+            })
+            .catch((error: Error) => {
+                logger.error(error.message);
+                res.status(500).json({ error: "InternalError", message: "Something wrong" });
+            });
+
+    })
+
+    /**
+    * @descr Modify specify <%= table %> identified by id
+    * @route PUT /<%= table %>/id
+    * @access public
+    */
+    
+    .put("/:id", <% if(dto) { %>checkDTO(update<%= tableU %>)), <% } %> async (req: express.Request, res: express.Response) => {
+
+        <%= table %>.updateById(Number(req.params.id), req.body)
+            .then((data) => {
+                res.status(201).json({ data, message: "object <%= table %> updated successfully" });
+            })
+            .catch((error: PError) => {
+
+                logger.error(error);
+                if ("code" in error && error.code === "P2025") {
+                    res.status(404).json({ error: "NotFound", message: error.meta });
+                } else {
+                    res.status(500).json({ error: "InternalError", message: "Something wrong" });
+                }
+
+            });
+
+    })
+
+    /**
+    * @descr Delete specify <%= table %> identified by id
+    * @route DELETE /<%= table %>/id
+    * @access public
+    */
+
+    .delete("/:id", async (req: express.Request, res: express.Response) => {
+
+        <%= table %>.deleteById(Number(req.params.id))
+            .then((data) => {
+                res.status(201).json({ data, message: "object <%= table %> deleted successfully" });
+            })
+            .catch((error: PError) => {
+                logger.error(error);
+                if ("code" in error && error.code === "P2025") {
+                    res.status(404).json({ error: error.name, message: error.meta });
+                } else {
+                    res.status(500).json({ error: "InternalError", message: "Something wrong" });
+                }
+            });
+    });
+
+export = router;
