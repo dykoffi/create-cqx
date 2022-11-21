@@ -8,7 +8,7 @@ import { Command } from "commander";
 
 // Import Commands
 
-import init from "./commands/init.js";
+import init from "./init.js";
 
 // Import Commands
 
