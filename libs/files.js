@@ -106,6 +106,15 @@ export async function writeEnv(apiname) {
     });
 }
 
+export async function writeSecretsJSON(apiname) {
+    let transFile = await ejs.renderFile(
+        join(__dirname, "../templates/secrets.json")
+    );
+    fs.writeFile(join(apiname, "secrets.json"), transFile, (err) => {
+        if (err) throw err;
+    });
+}
+
 export async function writeDocker(apiname, description) {
     let transFile = await ejs.renderFile(
         join(__dirname, "../templates/Dockerfile-multiple-staging"), { apiname, description }
