@@ -16,6 +16,10 @@ import {
     logError,
 } from "../libs/utils.js";
 
+//set env variables
+
+process.env.CONFIG_PATH = ".cqx";
+
 const program = new Command();
 
 // Define commands
@@ -37,6 +41,7 @@ program
     )
     .action((folder, options) => {
         console.time("time");
+        console.log(folder);
         init(
                 folder,
                 options.description,

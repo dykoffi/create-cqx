@@ -37,15 +37,17 @@ function init(
                 rejects(`${apiname} already exist`);
             }
 
+            
             // CREATE FOLDER FOR CREDENTIALS
             createFolder(apiname);
             createFolder(join(apiname, process.env.CONFIG_PATH));
             createFolder(join(apiname, process.env.CONFIG_PATH, "keys"));
-
+            
             // CREATE FOLDER FOR DB MODEL
             createFolder(join(apiname, "prisma"));
             createFolder(join(apiname, ".circleci"));
-
+            
+            console.log(apiname);
             // CREATE INITIAL FILES
             writePackage(apiname, description);
             writePass(apiname);
