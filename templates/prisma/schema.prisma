@@ -19,7 +19,7 @@ generator json {
 
 model Token_ {
   id         Int      @id @default(autoincrement())
-  value      String  @db.Text
+  value      String   @db.Text @unique
   pass       String
   createdAt_ DateTime @default(now())
 }
