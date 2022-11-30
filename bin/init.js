@@ -14,7 +14,7 @@ import {
     writeCircleConfig,
     writeSetup,
     writeSecretsJSON,
-} from "../libs/files.js";
+} from "../libs/files.js";  
 
 import { join, resolve } from "path";
 import chalk from "chalk";
@@ -45,9 +45,7 @@ function init(
             
             // CREATE FOLDER FOR DB MODEL
             createFolder(join(apiname, "prisma"));
-            createFolder(join(apiname, ".circleci"));
             
-            console.log(apiname);
             // CREATE INITIAL FILES
             writePackage(apiname, description);
             writePass(apiname);
@@ -58,13 +56,14 @@ function init(
             writePrismaSchema(apiname);
             writeTSConfig(apiname);
             writeSecretsJSON(apiname);
-
+            
             // VERIFY IF CREATE DOCKER FILE
             writeDocker(apiname, description);
             writeCompose(apiname);
-
+            
             // VERIFY IF CREATE CIRCLECI FILE
             if (ci) {
+                createFolder(join(apiname, ".circleci"));
                 writeDokcerCircle(apiname);
                 writeCircleConfig(apiname, gregion, gproject);
             }

@@ -40,8 +40,6 @@ program
         "Copy an existing node_modules and yarn.lock in the project"
     )
     .action((folder, options) => {
-        console.time("time");
-        console.log(folder);
         init(
                 folder,
                 options.description,
@@ -51,9 +49,7 @@ program
                 options.gproject,
                 options.modulesPath
             )
-            .then(() => {
-                console.timeEnd("time");
-            })
+            .then(() => {})
             .catch((err) => {
                 logError(err);
                 process.exit(1);
