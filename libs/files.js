@@ -83,8 +83,6 @@ export async function writePackage(apiname, description) {
     CiqlJson.open(join(__dirname, "../templates/package.json"))
         .set("name", apiname.toLowerCase())
         .set("description", description)
-        .set("scripts['db:start']", `docker-compose up -d ${apiname}_db_dev`)
-        .set("scripts['compose:up']", `docker-compose up -d ${apiname}`)
         .set(
             "scripts['docker:build']",
             `cqx build && DOCKER_BUILDKIT=1 docker build -t dykoffi/${apiname.toLowerCase()} ./build && rm -rdf build`
