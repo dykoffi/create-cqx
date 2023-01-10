@@ -93,7 +93,6 @@ jobs:
             --region $GOOGLE_COMPUTE_REGION
             --allow-unauthenticated
 
-
 workflows:
   deploy:
     jobs:
