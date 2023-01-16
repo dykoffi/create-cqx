@@ -1,4 +1,4 @@
-# Moust documentation for begining
+# <%= apiname %> documentation for begining
 
 ### Prerequises
 
@@ -6,6 +6,7 @@
 - [cqx](https://www.npmjs.com/package/cqx)
 - [Git](https://git-scm.com/)
 - [gh](https://cli.github.com/) (optional)
+- [circleci](https://circleci.com/docs/local-cli/) (optional) for ci/cd pipelines
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker-compose](https://docs.docker.com/compose/)
 
@@ -24,15 +25,17 @@
 - [Supertest](https://www.npmjs.com/package/supertest) For making Api test.
 - [Express Js](https://expressjs.com/fr/4x/api.html)
 
-### For Begining
+### Run on local
 
-1. Your dev database connection is define in **`.env`** file
+1. Your dev database connection is define in `.env` file
 2. Use ``yarn start:stack`` to run all stack the project needs to run (like database)
 3. Define your model in **prisma/schema.prisma**
 4. Use `yarn update` to update API and database structure following your model in schema.prisma file
 5. Use `yarn start:dev` to run project in dev environment
+6. Use `yart test` to run tests
+7. Use `yarn lint` to lint the code
 
-### Manage versionning
+### Manage versionning (Just at the first launch)
 
 1. Initialize the local repository `git init`
 2. Define the main branch `git branch -M main`
@@ -40,3 +43,24 @@
 4. Commit your code by using `git commit -am "First commit"`
 5. Create git repository `gh repo create moust -s . -r origin --public --push`
 6. If you wnat you open the repository in the browser `gh browse`
+
+### Deploy on gcloud (Cloud run)
+
+1. Build the docker image using `yarn docker:build` (don't forget to change the name of the image as you like)
+2. Create your gcloud docker repo `gcloud artifacts repositories create <%= apiname %> --location <region></region> --repository-format docker`
+3. Get permissions to push image on it using `gcloud auth configure-docker <region>-docker.pkg.dev`
+4. Push your docker image by using `docker push <region>-docker.pkg.dev/<project-id>/<%= apiname %>/api`
+5. Deploy your app on cloud run
+
+   ```bash
+   gcloud run deploy <%= apiname %> \
+    --image=<region>-docker.pkg.dev/<project-id>/<%= apiname %>/api \
+    --port=80 \
+    --min-instances=0 \
+    --max-instances=100 \
+    --cpu=1 \
+    --memory=1024Mi \
+    --region=<region> \
+    --labels=app=<%= apiname %>,env=staging \
+    --set-env-vars=""
+   ```

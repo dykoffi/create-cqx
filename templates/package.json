@@ -6,6 +6,7 @@
     "private": false,
     "scripts": {
         "build": "rm -rdf build && cqx build",
+        "lint": "prettier -wc .",
         "start:stack": "docker compose up -d",
         "start:dev": "NODE_ENV=local nodemon ./index.ts",
         "start:debug": "NODE_ENV=local DEBUG=* nodemon ./index.ts",
@@ -28,7 +29,7 @@
         "prom-client": "^14.1.0",
         "serve-favicon": "^2.5.0",
         "winston": "^3.8.2",
-        "winston-daily-rotate-file": "^4.7.1"
+        "winston-daily-rotate-file": "^4.7.1"   
     },
     "devDependencies": {
         "@types/compression": "^1.7.2",
@@ -42,8 +43,9 @@
         "@types/on-finished": "^2.3.1",
         "@types/serve-favicon": "^2.5.3",
         "@types/swagger-ui-express": "^4.1.3",
-        "cqx": "^1.13.3",
+        "cqx": "^1.13.4",
         "jest": "^28.1.0",
+        "prettier": "^2.8.3",
         "prisma-json-schema-generator": "^2.0.11",
         "supertest": "^6.2.3",
         "ts-jest": "^28.0.1",
