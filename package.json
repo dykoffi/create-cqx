@@ -1,6 +1,6 @@
 {
     "name": "create-cqx",
-    "version": "1.0.13",
+    "version": "1.0.14",
     "description": "make fastly api based on expressjs & prisma",
     "main": "./bin/index.js",
     "private": false,
