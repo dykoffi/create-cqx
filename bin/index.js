@@ -28,26 +28,10 @@ program
     .argument("<folder>", "Folder where you want to initialize project")
     .description("Initiating a cqx project")
     .option("-d, --description <description>", "Description of the project")
-    .option("--ci", "Add .circleci/config.yml file")
-    .option(
-        "--setup",
-        "Generate setup.sh file to setup project on github and circleci"
-    )
-    .option("--gregion <gregion>", "Google compute regio,", "europe-north1")
-    .option("--gproject <gproject>", "Google project ID", "cqx")
-    .option(
-        "-m, --modules-path <modules_path>",
-        "Copy an existing node_modules and yarn.lock in the project"
-    )
     .action((folder, options) => {
         init(
                 folder,
-                options.description,
-                options.ci,
-                options.setup,
-                options.gregion,
-                options.gproject,
-                options.modulesPath
+                options.description
             )
             .then(() => {})
             .catch((err) => {

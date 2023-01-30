@@ -201,9 +201,9 @@ export async function writeSetup(apiname) {
 
 // WRITE IN CIRCLECI FOLDER
 
-export async function writeCircleConfig(apiname, gregion, gproject) {
+export async function writeCircleConfig(apiname) {
     let transFile = await ejs.renderFile(
-        join(__dirname, "../templates/.circleci/config.yml"), { apiname, gregion, gproject }
+        join(__dirname, "../templates/.circleci/config.yml"), { apiname }
     );
     fs.writeFile(join(apiname, ".circleci/config.yml"), transFile, (err) => {
         if (err) throw err;

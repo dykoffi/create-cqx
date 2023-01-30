@@ -14,7 +14,7 @@ import {
     writeCircleConfig,
     writeSetup,
     writeSecretsJSON,
-} from "../libs/files.js";  
+} from "../libs/files.js";
 
 import { join, resolve } from "path";
 import chalk from "chalk";
@@ -24,28 +24,22 @@ import fsExtra from "fs-extra";
 
 function init(
     apiname,
-    description,
-    ci=false,
-    setup=false,
-    gregion="europe-west-3",
-    gproject="cqx",
-    modules_path=false
+    description
 ) {
-    return new Promise(async(resolves, rejects) => {
+    return new Promise(async (resolves, rejects) => {
         try {
             if (existsSync(resolve(apiname))) {
                 rejects(`${apiname} already exist`);
             }
 
-            
             // CREATE FOLDER FOR CREDENTIALS
             createFolder(apiname);
             createFolder(join(apiname, process.env.CONFIG_PATH));
             createFolder(join(apiname, process.env.CONFIG_PATH, "keys"));
-            
+
             // CREATE FOLDER FOR DB MODEL
             createFolder(join(apiname, "prisma"));
-            
+
             // CREATE INITIAL FILES
             writePackage(apiname, description);
             writePass(apiname);
@@ -56,30 +50,14 @@ function init(
             writePrismaSchema(apiname);
             writeTSConfig(apiname);
             writeSecretsJSON(apiname);
-            
+
             // VERIFY IF CREATE DOCKER FILE
             writeDocker(apiname, description);
             writeCompose(apiname);
-            
+
             // VERIFY IF CREATE CIRCLECI FILE
-            if (ci) {
-                createFolder(join(apiname, ".circleci"));
-                writeDokcerCircle(apiname);
-                writeCircleConfig(apiname, gregion, gproject);
-            }
-            if (setup) {
-                writeSetup(apiname);
-            }
-            if (modules_path) {
-                fsExtra.copySync(
-                    join(modules_path, "node_modules"),
-                    join(apiname, "node_modules")
-                );
-                fsExtra.copyFileSync(
-                    join(modules_path, "yarn.lock"),
-                    join(apiname, "yarn.lock")
-                );
-            }
+            createFolder(join(apiname, ".circleci"));
+            writeCircleConfig(apiname, gregion, gproject);
 
             // VERIFY IF YARN IS INSTALLED
             exec("yarn --help", { cwd: resolve(apiname) }, (err, stdout, stderr) => {
