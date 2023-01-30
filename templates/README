@@ -37,51 +37,86 @@
 
 ### Manage versionning (Only at first launch)
 
-1. Initialize the local repository `git init`
-2. Define the main branch `git branch -M main`
-3. Add files in `git add .`
-4. Commit your code by using `git commit -am "First commit"`
-5. Create git repository `gh repo create <%= repo_name %> --source . --remote origin --public --push`
-6. If you wnat you open the repository in the browser `gh browse`
+```bash
+# Initialize the local repository
+git init
+
+# Define the main branch
+git branch -M main
+
+## Add files
+git add .
+
+# Commit your code
+git commit -am "First commit"
+
+# Create git repository 
+gh repo create <%= repo_name %> --source . --remote origin --public --push
+
+# Open the repository in the rowser 
+gh browse
+```
 
 ### Manage CI/CI with circleci (Only at first launch)
 
 1. Make sure you have installed [circleci cli](https://circleci.com/docs/local-cli/)
 2. Before using the CLI, you need to generate a CircleCI API token from the [Personal API Token tab](https://app.circleci.com/settings/user/tokens)
-3. After you get your token, configure the CLI by running: `circleci setup`
-4. Validate a CircleCI config with `ciclceci config validate`
-5. Use `circleci follow` to attempt to follow the project for the current git repository
-6. Use `circleci open` to open the project in the browser
+```bash
+# After you get your token, configure the CLI by running: 
+circleci setup
+
+# Validate a CircleCI config with 
+ciclceci config validate
+
+# Attempt to follow the project for the current git repository
+circleci follow
+
+# Open the project in the browser
+circleci open
+```
 
 ### Git pre-commit considerations
  
 If you need to validate your commits by checking the results of your tests or the linting of your code, you can use the prepare-commit-msg hook. To do so, you can use the :
 
-1. Rename the file .git/hooks/prepare-commmit-msg.sample to .git/hooks/prepare-commit-msg
+1. Rename the file .git/hooks/prepare-commmit-msg.sample to .git/hooks/prepare-commit-msg 
+
+```bash
+mv .git/hooks/prepare-commmit-msg.sample .git/hooks/prepare-commit-msg
+```
+
 2. Add the following lines to the file .git/hooks/prepare-commit-msg :
 
-   ```bash
-   # If the circleci config file is valid and all of the test success
-   circleci config validate && yarn lint && yarn jest
+```bash
+# If the circleci config file is valid and all of the test success
+circleci config validate && yarn lint && yarn jest
    ```
 
 ### Deploy on gcloud (Cloud run)
 
-1. Build the docker image using `yarn docker:build` (don't forget to change the name of the image as you like)
-2. Create your gcloud docker repo `gcloud artifacts repositories create <%= apiname %> --location <region> --repository-format docker`
-3. Get permissions to push image on it using `gcloud auth configure-docker <region>-docker.pkg.dev`
-4. Push your docker image by using `docker push <region>-docker.pkg.dev/<project-id>/<%= apiname %>/api`
-5. Deploy your app on cloud run
+```bash
+# Build the docker image using 
+# (don't forget to change the name of the image as you like)
+yarn docker:build
 
-   ```bash
-   gcloud run deploy <%= apiname %> \
-    --image=<region>-docker.pkg.dev/<project-id>/<%= apiname %>/api \
-    --port=80 \
-    --min-instances=0 \
-    --max-instances=100 \
-    --cpu=1 \
-    --memory=1024Mi \
-    --region=<region> \
-    --labels=app=<%= apiname %>,env=staging \
-    --set-env-vars=""
-   ```
+# Create your gcloud docker repo 
+gcloud artifacts repositories create <%= apiname %> --location <region> --repository-format docker
+
+# Get permissions to push image on it using 
+gcloud auth configure-docker <region>-docker.pkg.dev
+
+# Push your docker image by using 
+docker push <region>-docker.pkg.dev/<project-id>/<%= apiname %>/api
+
+# Deploy your app on cloud run
+gcloud run deploy <%= apiname %> \
+   --image=<region>-docker.pkg.dev/<project-id>/<%= apiname %>/api \
+   --port=80 \
+   --min-instances=0 \
+   --max-instances=100 \
+   --cpu=1 \
+   --memory=1024Mi \
+   --region=<region> \
+   --labels=app=<%= apiname %>,env=staging \
+   --set-env-vars=""
+```

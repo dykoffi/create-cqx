@@ -57,7 +57,7 @@ function init(
 
             // VERIFY IF CREATE CIRCLECI FILE
             createFolder(join(apiname, ".circleci"));
-            writeCircleConfig(apiname, gregion, gproject);
+            writeCircleConfig(apiname);
 
             // VERIFY IF YARN IS INSTALLED
             exec("yarn --help", { cwd: resolve(apiname) }, (err, stdout, stderr) => {

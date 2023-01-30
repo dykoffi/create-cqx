@@ -6,11 +6,7 @@ executors:
     shell: bash
     environment:
       VERSION: 1.0.0
-      REGISTRY_URL: docker.pkg.dev
-      REPO: <%= apiname %>
-      GOOGLE_COMPUTE_REGION: <%= gregion %>
-      GOOGLE_PROJECT_ID: <%= gproject %>
-      SERVICE_NAME: <%= apiname %>
+      REPO: linkpay
 
 commands:
   restore_cache_yarn:
@@ -33,70 +29,46 @@ jobs:
     steps:
       - checkout
 
-      ####################### BUILD PROJECT ###########################
+      ####################### INSTALL DEPENDENCIES ###########################
 
       - restore_cache_yarn
       - run:
           name: Install dependencies
-          command: |
-            yarn install
+          command: yarn install
       - save_cache_yarn
-      - run:
-          name: Build project
-          command: |
-            npx cqx build
-      - run:
-          name: Enable Google Storage Key
-          command: echo $GCLOUD_STORAGE_KEY > ./build/.cqx/keys/gs.json
-      - run: yarn install --prod
-      - run:
-          name: Copy file in built project
-          command: |
-            cp -r ./node_modules build/node_modules
-            cp Dockerfile-circleci build/
-      - run:
-          name: Update production database
-          command: |
-            echo "DATABASE_URL=${DATABASE_URL}" > .env &
-            npx prisma migrate deploy &
-            npx prisma generate &
-          working_directory: build
+
+      ####################### TEST PROJECT ###########################
 
       - run:
-          name: Building docker Image
-          command: docker build
-            -t ${GOOGLE_COMPUTE_REGION}-${REGISTRY_URL}/${GOOGLE_PROJECT_ID}/${REPO}/${SERVICE_NAME}:${VERSION}
-            -f Dockerfile-circleci .
-          working_directory: build
+          name: Run code test
+          command: JEST_JUNIT_OUTPUT_DIR="./artifacts" yarn test --ci --reporters=jest-junit
 
-      ####################### Initialize gcloud CLI ###########################
+      - store_artifacts:
+          path: coverage
 
-      - run:
-          name: Initialize gcloud CLI to connect to Google cloud
-          command: |
-            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      - store_test_results:
+          path: artifacts
 
-      - run: gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-      - run: gcloud auth configure-docker ${GOOGLE_COMPUTE_REGION}-${REGISTRY_URL}
-      - run: gcloud --quiet config set project $GOOGLE_PROJECT_ID
+      # ####################### BUILD PROJECT ###########################
 
-      ####################### BUILD & DEPOLY DOCKER IMAGE ###########################
+      # - run:
+      #     name: Build project
+      #     command: yarn cqx build
+      # - run:
+      #     name: Install production packages
+      #     command: yarn install --prod
+      #     working_directory: build
 
-      - run:
-          name: push image to Artifact Registry
-          command: docker push ${GOOGLE_COMPUTE_REGION}-${REGISTRY_URL}/${GOOGLE_PROJECT_ID}/${REPO}/${SERVICE_NAME}:${VERSION}
-      - run:
-          name: Deploying container to Cloud Run service
-          command: gcloud run deploy $SERVICE_NAME
-            --image ${GOOGLE_COMPUTE_REGION}-${REGISTRY_URL}/${GOOGLE_PROJECT_ID}/${REPO}/${SERVICE_NAME}:${VERSION}
-            --port 80
-            --region $GOOGLE_COMPUTE_REGION
-            --allow-unauthenticated
+      # ####################### DOCKER BUILD ###########################
+
+      # - run:
+      #     name: Building docker Image
+      #     command: docker build -t dykoffi/${REPO} .
+      #     working_directory: build
 
 workflows:
   deploy:
     jobs:
       - build_deploy_on_cloud_run:
-          context: 
-            - Gcloud
+          context:
             - cqx
