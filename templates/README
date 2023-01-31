@@ -51,7 +51,7 @@ git add .
 git commit -am "First commit"
 
 # Create git repository 
-gh repo create <%= repo_name %> --source . --remote origin --public --push
+gh repo create <%= apiname %> --source . --remote origin --public --push
 
 # Open the repository in the rowser 
 gh browse
