@@ -37,43 +37,22 @@
 
 ### Manage versionning (Only at first launch)
 
-```bash
-# Initialize the local repository
-git init
-
-# Define the main branch
-git branch -M main
-
-## Add files
-git add .
-
-# Commit your code
-git commit -am "First commit"
-
-# Create git repository 
-gh repo create <%= apiname %> --source . --remote origin --public --push
-
-# Open the repository in the rowser 
-gh browse
-```
+1. Initialize the local repository `git init`
+2. Define the main branch `git branch -M main`
+3. Add files in `git add .`
+4. Commit your code by using `git commit -am "First commit"`
+5. Create git repository `gh repo create <%= apiname %> --source . --remote origin --public --push`
+6. If you wnat you open the repository in the browser `gh browse`
 
 ### Manage CI/CI with circleci (Only at first launch)
 
 1. Make sure you have installed [circleci cli](https://circleci.com/docs/local-cli/)
 2. Before using the CLI, you need to generate a CircleCI API token from the [Personal API Token tab](https://app.circleci.com/settings/user/tokens)
-```bash
-# After you get your token, configure the CLI by running: 
-circleci setup
+3. After you get your token, configure the CLI by running: `circleci setup`
+4. Validate a CircleCI config with `ciclceci config validate`
+5. Use `circleci follow` to attempt to follow the project for the current git repository
+6. Use `circleci open` to open the project in the browser
 
-# Validate a CircleCI config with 
-ciclceci config validate
-
-# Attempt to follow the project for the current git repository
-circleci follow
-
-# Open the project in the browser
-circleci open
-```
 
 ### Git pre-commit considerations
  
